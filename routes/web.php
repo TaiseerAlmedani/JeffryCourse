@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Scalar\MagicConst\Dir;
@@ -16,22 +17,14 @@ use PhpParser\Node\Scalar\MagicConst\Dir;
 */
 
 Route::get('/', function () {
-    return view('posts');
+     return view('posts', [
+        'posts'=> post::all()
+    ]);
 });
 
 Route::get('posts/{post}', function ($slug) {
-
-    if (! file_exists($path =  __DIR__ ."/../resources/posts/{$slug}.html")) {
-        // dd('file does not exist');
-        // abort(404);
-        return redirect('/');
-    }
-//    $post =  Cache() ->remember("post.{$slug}" ,10, function() use($path)
-   $post =  Cache() ->remember("post.{$slug}" ,10, fn() => file_get_contents($path));
-    // {
-        // var_dump('file_get_content($path)');
-        // return file_get_contents($path);
-    // });
-
-    return  view('post'  , [ 'post' =>$post]);
+    $post = Post::find($slug);
+    return view('post',[
+        'post' => $post
+    ]);
 }) -> where('post' ,'[A-z_/-]+');
