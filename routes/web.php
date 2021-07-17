@@ -4,6 +4,10 @@ use App\Models\Post;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Scalar\MagicConst\Dir;
+use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
+
+use function PHPSTORM_META\map;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +21,14 @@ use PhpParser\Node\Scalar\MagicConst\Dir;
 */
 
 Route::get('/', function () {
-     return view('posts', [
-        'posts'=> post::all()
-    ]);
-});
+    return view('posts', [
+    'posts'=> Post::all()
+ ]);
+ });
 
 Route::get('posts/{post}', function ($slug) {
     $post = Post::find($slug);
-    return view('post',[
+    return view('post', [
         'post' => $post
     ]);
-}) -> where('post' ,'[A-z_/-]+');
+}) -> where('post', '[A-z_/-]+');
